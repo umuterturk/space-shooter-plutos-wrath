@@ -62,17 +62,17 @@ export class PowerUpManager {
         } else {
             // Define power-up types with individual weights
             const powerUpWeights = {
-                'double': 20,   // 15%
-                'triple': 15,   // 14%
-                'rapid': 10,    // 13%
-                'plasma': 10,   // 10%
-                'speed': 10,    // 10%
-                'health': 10,   // 10%
-                'agility': 15,   // 7%
-                'thrust': 15,    // 7%
-                'godmode': 4,   // 4%
-                'nuclear': 10,   // 4%
-                'missile': 10    // 6%
+                'double': 20,
+                'triple': 15,
+                'rapid': 10,
+                'plasma': 10, 
+                'speed': 10,  
+                'health': 10, 
+                'agility': 15,
+                'thrust': 15, 
+                'godmode': 4, 
+                'nuclear': 10,
+                'missile': 10 
             };
             
             // Calculate total weight for normalization

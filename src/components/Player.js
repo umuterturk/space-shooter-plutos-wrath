@@ -21,7 +21,7 @@ export class Player {
         this.lives = 3;
         this.invulnerable = false;
         this.invulnerableTimer = 0;
-        this.invulnerableDuration = 120; // frames of invulnerability after hit
+        this.invulnerableDuration = 60; // frames of invulnerability after hit
         
         // God mode properties
         this.godModeActive = false;

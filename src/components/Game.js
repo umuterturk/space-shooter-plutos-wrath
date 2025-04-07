@@ -43,6 +43,12 @@ export class Game {
         this.frameInterval = 1000 / this.fps;
         this.frameTimer = 0;
         
+        // FPS counter
+        this.fpsCounter = 0;
+        this.framesThisSecond = 0;
+        this.lastFpsUpdate = 0;
+        this.actualFps = 0;
+        
         // Reset key handler
         this.restartListener = this.handleRestart.bind(this);
         window.addEventListener('keydown', this.restartListener);
@@ -101,6 +107,14 @@ export class Game {
     gameLoop(timeStamp) {
         const deltaTime = timeStamp - this.lastTime;
         this.lastTime = timeStamp;
+        
+        // FPS calculation
+        this.framesThisSecond++;
+        if (timeStamp > this.lastFpsUpdate + 1000) {
+            this.actualFps = this.framesThisSecond;
+            this.framesThisSecond = 0;
+            this.lastFpsUpdate = timeStamp;
+        }
         
         if (this.frameTimer > this.frameInterval) {
             this.ctx.clearRect(0, 0, this.width, this.height);
@@ -201,6 +215,11 @@ export class Game {
         
         // Draw current wave
         this.ctx.fillText(`WAVE: ${this.enemyManager.currentWave}`, 20, 60);
+        
+        // Draw FPS counter
+        this.ctx.font = '12px "Press Start 2P", monospace';
+        this.ctx.fillText(`FPS: ${this.actualFps}`, this.width - 100, 20);
+        this.ctx.font = '20px "Press Start 2P", monospace';
         
         // Draw health bar
         this.ctx.fillText(`HEALTH:`, 20, 90);

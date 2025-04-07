@@ -6,8 +6,8 @@ export class Enemy {
         this.type = type;
         this.markedForDeletion = false;
         
+        this.healthMultiplier = 1; // No scaling
         // Get scaling factors (defaults to no scaling)
-        this.healthMultiplier = scale.healthMultiplier || 1;
         this.speedMultiplier = scale.speedMultiplier || 1;
         this.scoreMultiplier = scale.scoreMultiplier || 1;
         
@@ -15,6 +15,11 @@ export class Enemy {
         this.isFlashing = false;
         this.flashDuration = 5;
         this.flashTimer = 0;
+        
+        // Add projectile properties for large enemies
+        this.projectiles = [];
+        this.canShoot = false;
+        this.shootTimer = 0;
         
         // Set properties based on enemy type
         switch(type) {
@@ -41,6 +46,8 @@ export class Enemy {
                 this.health = Math.ceil(70 * this.healthMultiplier); // Scale with wave difficulty
                 this.score = Math.ceil(50 * this.scoreMultiplier);
                 this.color = '#FF9900';
+                this.canShoot = true; // Only large enemies can shoot
+                this.shootCooldown = 60 + Math.random() * 60; // Random cooldown between shots
                 break;
             default:
                 this.width = 32;
@@ -196,6 +203,20 @@ export class Enemy {
             if (this.x > this.game.width - this.width) this.x = this.game.width - this.width;
         }
         
+        // Handle shooting for large enemies
+        if (this.canShoot && this.type === 'large') {
+            this.shootTimer++;
+            if (this.shootTimer >= this.shootCooldown) {
+                this.shoot();
+                this.shootTimer = 0;
+                this.shootCooldown = 60 + Math.random() * 60; // Reset with random timing
+            }
+        }
+        
+        // Update projectiles
+        this.projectiles = this.projectiles.filter(projectile => !projectile.markedForDeletion);
+        this.projectiles.forEach(projectile => projectile.update());
+        
         // Check if off screen
         if (this.y > this.game.height) {
             this.markedForDeletion = true;
@@ -216,6 +237,9 @@ export class Enemy {
         
         // Draw normal sprite
         ctx.drawImage(this.sprite, this.x, this.y);
+        
+        // Draw projectiles
+        this.projectiles.forEach(projectile => projectile.draw(ctx));
     }
     
     hit(damage) {
@@ -231,5 +255,94 @@ export class Enemy {
             return true;
         }
         return false;
+    }
+    
+    // New method to shoot projectiles
+    shoot() {
+        // Create 3 projectiles for large enemies (spread pattern)
+        const centerX = this.x + this.width / 2;
+        const bottomY = this.y + this.height;
+        
+        // Center projectile
+        this.projectiles.push(new EnemyProjectile(
+            this.game,
+            centerX - 3,
+            bottomY,
+            0,
+            6
+        ));
+        
+        // Left projectile (angled)
+        this.projectiles.push(new EnemyProjectile(
+            this.game,
+            centerX - 8,
+            bottomY - 5,
+            -1.5,
+            5.5
+        ));
+        
+        // Right projectile (angled)
+        this.projectiles.push(new EnemyProjectile(
+            this.game,
+            centerX + 3,
+            bottomY - 5,
+            1.5,
+            5.5
+        ));
+    }
+}
+
+// Add EnemyProjectile class
+class EnemyProjectile {
+    constructor(game, x, y, speedX, speedY) {
+        this.game = game;
+        this.x = x;
+        this.y = y;
+        this.width = 6;
+        this.height = 10;
+        this.speedY = speedY;
+        this.speedX = speedX;
+        this.damage = 10;
+        this.markedForDeletion = false;
+        this.color = '#FF9966';
+    }
+    
+    update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        
+        // Mark for deletion if off screen
+        if (this.y > this.game.height || this.x < 0 || this.x > this.game.width) {
+            this.markedForDeletion = true;
+        }
+    }
+    
+    draw(ctx) {
+        ctx.save();
+        
+        // Create gradient for projectile
+        const gradient = ctx.createLinearGradient(this.x, this.y, this.x, this.y + this.height);
+        gradient.addColorStop(0, '#FF3300');
+        gradient.addColorStop(1, '#FFFF00');
+        
+        // Draw bullet
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + this.width, this.y);
+        ctx.lineTo(this.x + this.width / 2, this.y + this.height);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Add glow effect
+        ctx.globalAlpha = 0.5;
+        ctx.shadowColor = '#FF6600';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = '#FF9900';
+        ctx.beginPath();
+        ctx.arc(this.x + this.width / 2, this.y + this.height / 3, this.width / 2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.restore();
     }
 } 

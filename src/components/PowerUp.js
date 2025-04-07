@@ -295,28 +295,32 @@ export class PowerUp {
         let notificationText = '';
         let color = '#FFFFFF';
         
-        const BULLET_AMOUNT = 100; // Each power-up adds 500 bullets
+        var BULLET_AMOUNT = 100; 
         
         switch(this.type) {
             case 'double':
+                BULLET_AMOUNT = 150;
                 // Add bullets to inventory instead of switching guns
                 player.gun.addBullets('double', BULLET_AMOUNT);
                 notificationText = `+${BULLET_AMOUNT} DOUBLE GUN AMMO`;
                 color = '#33CCFF';
                 break;
             case 'triple':
+                BULLET_AMOUNT = 200;
                 // Add bullets to inventory instead of switching guns
                 player.gun.addBullets('triple', BULLET_AMOUNT);
                 notificationText = `+${BULLET_AMOUNT} TRIPLE GUN AMMO`;
                 color = '#33FF33';
                 break;
             case 'rapid':
+                BULLET_AMOUNT = 250;
                 // Add bullets to inventory instead of switching guns
                 player.gun.addBullets('rapid', BULLET_AMOUNT);
                 notificationText = `+${BULLET_AMOUNT} RAPID FIRE AMMO`;
                 color = '#FFFF33';
                 break;
             case 'plasma':
+                BULLET_AMOUNT = 100;
                 // Add bullets to inventory instead of switching guns
                 player.gun.addBullets('plasma', BULLET_AMOUNT);
                 notificationText = `+${BULLET_AMOUNT} PLASMA AMMO`;

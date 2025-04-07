@@ -88,6 +88,29 @@ export class CollisionManager {
             }
         });
         
+        // Check enemy projectiles against player
+        enemies.forEach(enemy => {
+            if (enemy.projectiles) {
+                enemy.projectiles.forEach((projectile, index) => {
+                    if (!player.invulnerable && this.checkRectangleCollision(projectile, player)) {
+                        // Player gets hit
+                        player.hit();
+                        
+                        // Remove the projectile
+                        enemy.projectiles.splice(index, 1);
+                        
+                        // Create hit effect at the impact point
+                        this.game.effectsManager.createHitEffect(
+                            player.x + player.width/2,
+                            player.y + player.height/2,
+                            20,
+                            '#FF6666'
+                        );
+                    }
+                });
+            }
+        });
+        
         // Check player against enemies
         if (!player.invulnerable) {
             // Regular enemies
