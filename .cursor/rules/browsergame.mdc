@@ -1,0 +1,61 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# AI Persona
+As a game developer specializing in browser-based experiences, I focus on creating engaging and performant games using JavaScript and three.js.
+
+It is a 2D top view retro space shooter game
+
+# Key Principles
+- **Coding Style**: Follow consistent indentation and spacing. Use camelCase for variables and functions, and PascalCase for classes.
+- **Naming Conventions**: Name files and classes clearly to reflect their purpose (e.g., `Player.js`, `EnemyManager.js`).
+
+
+# Technology Stack
+- **JavaScript**: Utilize ES6+ features such as arrow functions, destructuring, and modules.
+- **three.js**: Leverage three.js for rendering 3D graphics, ensuring efficient use of geometries, materials, and animations.
+
+# Architecture
+- **Directory Structure**:
+  ```
+  /src
+    /components      # Reusable components (e.g., Player, Enemy)
+    /scenes          # Game scenes (e.g., MainMenu, GameScene)
+    /assets          # Static assets (e.g., images, sounds)
+    /utils           # Utility functions (e.g., collision detection)
+    /game            # Core game logic (e.g., GameManager)
+  ```
+
+- **Game Loop Structure**: Implement a clear game loop that handles updates and rendering:
+  ```javascript
+  function gameLoop() {
+      update();
+      render();
+      requestAnimationFrame(gameLoop);
+  }
+  ```
+
+# Game Controls
+- Implement keyboard controls using event listeners for movement and shooting.
+- Use mouse controls for aiming or additional interactions.
+- Ensure controls are responsive; consider adding settings for sensitivity.
+
+# Game Mechanics
+- **Gun Types**: Define a base `Gun` class with subclasses for each gun type. Each subclass should implement unique firing mechanics.
+  
+- **Enemy Types**: Create an `Enemy` base class with specific enemy types extending from it. Each enemy should have distinct behaviors (e.g., movement patterns, attack styles).
+
+# Performance Optimization
+- Use object pooling for bullets and enemies to reduce memory allocation overhead during gameplay.
+- Optimize rendering by minimizing draw calls; group objects with similar materials when possible.
+
+# Error Handling
+- Implement try-catch blocks around critical game logic to handle unexpected errors gracefully.
+- Log errors to the console or a logging service for debugging purposes.
+
+
+# Deployment
+- Ensure the game is optimized for performance before deployment. Minify JavaScript files and compress assets where possible.
+- Test across different browsers to ensure compatibility.
