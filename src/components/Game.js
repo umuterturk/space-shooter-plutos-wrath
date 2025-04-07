@@ -13,8 +13,9 @@ export class Game {
         this.ctx = canvas.getContext('2d');
         this.width = 800;
         this.height = 600;
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        
+        // Adjust canvas size based on device
+        this.setupCanvas();
         
         this.inputHandler = new InputHandler();
         this.player = new Player(this);
@@ -57,6 +58,40 @@ export class Game {
             duration: 0,
             timer: 0
         };
+        
+        // Handle window resize
+        window.addEventListener('resize', this.handleResize.bind(this));
+    }
+    
+    // Add this method to set up the canvas based on device
+    setupCanvas() {
+        if (this.isMobileDevice()) {
+            // Fill the screen on mobile
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        } else {
+            // Fixed size for desktop
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
+        }
+    }
+    
+    // Method to detect if this is a mobile device
+    isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+              (window.innerWidth <= 800 && window.innerHeight <= 900);
+    }
+    
+    // Handle window resize
+    handleResize() {
+        if (this.isMobileDevice()) {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        }
     }
     
     start() {
@@ -129,9 +164,9 @@ export class Game {
         this.background.draw(this.ctx);
         
         // Draw game elements
-        this.enemyManager.draw(this.ctx); // Draw enemies first (player should be on top)
+        this.enemyManager.draw(this.ctx);
         this.powerUpManager.draw(this.ctx);
-        this.effectsManager.draw(this.ctx); // Draw effects above enemies but below player
+        this.effectsManager.draw(this.ctx);
         this.player.draw(this.ctx);
         
         // Draw UI
@@ -148,6 +183,9 @@ export class Game {
         if (this.isPaused) {
             this.drawPauseOverlay();
         }
+        
+        // Draw mobile UI elements if on mobile
+        this.inputHandler.drawMobileUI(this.ctx);
         
         // Restore canvas if screen shake was applied
         if (this.screenShake.active) {

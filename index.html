@@ -2,21 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Shooter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pluto's Wrath</title>
     <style>
+        * {
+            touch-action: none;
+        }
+        
         body {
             margin: 0;
+            padding: 0;
             overflow: hidden;
             background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
+            touch-action: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
         }
+        
         canvas {
             display: block;
             image-rendering: pixelated;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            touch-action: none;
+        }
+        
+        @media (max-width: 800px) {
+            canvas {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
     </style>
 </head>
